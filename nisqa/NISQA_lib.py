@@ -1416,7 +1416,6 @@ class Fusion(torch.nn.Module):
             
         return x
         
-
 #%% Evaluation 
 def predict_mos(model, ds, bs, dev, num_workers=0):    
     '''
@@ -1436,7 +1435,7 @@ def predict_mos(model, ds, bs, dev, num_workers=0):
     yy = np.concatenate( y_hat_list, axis=1 )
     y_hat = yy[0,:,0].reshape(-1,1)
     y = yy[1,:,0].reshape(-1,1)
-    #ds.df['mos_pred'] = y_hat.astype(dtype=float)
+    ds.df['mos_pred'] = y_hat.astype(dtype=float)
     return y_hat, y
 
 def predict_dim(model, ds, bs, dev, num_workers=0):     
@@ -2130,22 +2129,13 @@ class SpeechQualityDataset(Dataset):
     def _load_spec(self, index):
         
             # Load spec    
-            if self.data_dir is not None:
-                file_path = os.path.join(self.data_dir, self.df[self.filename_column].iloc[index])
+            file_path = os.path.join(self.data_dir, self.df[self.filename_column].iloc[index])
 
-                if self.double_ended:
-                    file_path_ref = os.path.join(self.data_dir, self.df[self.filename_column_ref].iloc[index])
-                audio = None
-
-            else:
-                #NOTE: Make sure that self.data_dir param is set to None while calling this dataset class
-                #within validation setup
-                audio = self.df[index, ...]
-                file_path = None
+            if self.double_ended:
+                file_path_ref = os.path.join(self.data_dir, self.df[self.filename_column_ref].iloc[index])
        
             spec = get_librosa_melspec(
                 file_path,
-                audio,
                 sr = self.ms_sr,
                 n_fft=self.ms_n_fft,
                 hop_length=self.ms_hop_length,
@@ -2287,8 +2277,7 @@ def segment_specs(file_path, x, seg_length, seg_hop=1, max_length=None):
     return x, np.array(n_wins)
 
 def get_librosa_melspec(
-    audio=None,
-    file_path=None,
+    file_path,
     sr=48e3,
     n_fft=1024, 
     hop_length=80, 
@@ -2301,19 +2290,15 @@ def get_librosa_melspec(
     Calculate mel-spectrograms with Librosa.
     '''    
     # Calc spec
-    if audio is None:
-        try:
-            if ms_channel is not None:
-                y, sr = lb.load(file_path, sr=sr, mono=False)
-                if len(y.shape)>1:
-                    y = y[ms_channel, :]
-            else:
-                y, sr = lb.load(file_path, sr=sr)
-        except:
-            raise ValueError('Could not load file {}'.format(file_path))
-        
-    else:
-        y, sr = audio, 16000
+    try:
+        if ms_channel is not None:
+            y, sr = lb.load(file_path, sr=sr, mono=False)
+            if len(y.shape)>1:
+                y = y[ms_channel, :]
+        else:
+            y, sr = lb.load(file_path, sr=sr)
+    except:
+        raise ValueError('Could not load file {}'.format(file_path))
     
     hop_length = int(sr * hop_length)
     win_length = int(sr * win_length)
