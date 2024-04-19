@@ -28,7 +28,7 @@ class nisqaModel(object):
         
         if 'mode' not in self.args:
             self.args['mode'] = 'main'
-            
+
         self.runinfos = {}       
         #self._getDevice()
         self._loadModel()
@@ -936,7 +936,7 @@ class nisqaModel(object):
             else:
                 model_path = os.path.join(os.getcwd(), self.args['pretrained_model'])
             #checkpoint = torch.load(model_path, map_location=self.dev)
-            checkpoint = torch.load(model_path, map_location=self.args['dev'])
+            checkpoint = torch.load(model_path, map_location=torch.device(self.args['dev']))
             
             # update checkpoint arguments with new arguments
             checkpoint['args'].update(self.args)
