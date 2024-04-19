@@ -30,9 +30,9 @@ class nisqaModel(object):
             self.args['mode'] = 'main'
             
         self.runinfos = {}       
-        self._getDevice()
+        #self._getDevice()
         self._loadModel()
-        self._loadDatasets()
+        #self._loadDatasets()
         self.args['now'] = datetime.datetime.today()
         
         if self.args['mode']=='main':
@@ -935,7 +935,8 @@ class nisqaModel(object):
                 model_path = os.path.join(self.args['pretrained_model'])
             else:
                 model_path = os.path.join(os.getcwd(), self.args['pretrained_model'])
-            checkpoint = torch.load(model_path, map_location=self.dev)
+            #checkpoint = torch.load(model_path, map_location=self.dev)
+            checkpoint = torch.load(model_path, map_location=self.args['dev'])
             
             # update checkpoint arguments with new arguments
             checkpoint['args'].update(self.args)
