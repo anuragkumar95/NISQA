@@ -2290,8 +2290,8 @@ def segment_specs(file_path, x, seg_length, seg_hop=1, max_length=None):
     return x, np.array(n_wins)
 
 def get_librosa_melspec(
-    audio=None,
     file_path=None,
+    audio=None,
     sr=48e3,
     n_fft=1024, 
     hop_length=80, 
