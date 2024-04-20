@@ -2325,7 +2325,7 @@ def get_librosa_melspec(
     win_length = int(sr * win_length)
 
     S = lb.feature.melspectrogram(
-        y=y.reshape(1, -1),
+        y=y.reshape(-1, 1),
         sr=sr,
         S=None,
         n_fft=n_fft,
