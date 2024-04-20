@@ -2318,6 +2318,8 @@ def get_librosa_melspec(
         
     else:
         y, sr = audio, 16000
+
+    print(f"Y:{y.shape}")
     
     hop_length = int(sr * hop_length)
     win_length = int(sr * win_length)
@@ -2333,7 +2335,6 @@ def get_librosa_melspec(
         center=True,
         pad_mode='reflect',
         power=1.0,
-    
         n_mels=n_mels,
         fmin=0.0,
         fmax=fmax,
