@@ -2130,6 +2130,7 @@ class SpeechQualityDataset(Dataset):
     def _load_spec(self, index):
         
             # Load spec    
+            print(f"DATA_DIR:{self.data_dir}")
             if self.data_dir is not None:
                 file_path = os.path.join(self.data_dir, self.df[self.filename_column].iloc[index])
 
@@ -2142,7 +2143,9 @@ class SpeechQualityDataset(Dataset):
                 #within validation setup
                 audio = self.df[index, ...]
                 file_path = None
-       
+
+            print(f"file_path is None: {file_path is None}, audio is None:{audio is None}")
+
             spec = get_librosa_melspec(
                 file_path,
                 audio,
@@ -2301,6 +2304,7 @@ def get_librosa_melspec(
     Calculate mel-spectrograms with Librosa.
     '''    
     # Calc spec
+    print(f"MEL_SPEC: audio:{audio is None}, file_path:{file_path}")
     if audio is None:
         try:
             if ms_channel is not None:
