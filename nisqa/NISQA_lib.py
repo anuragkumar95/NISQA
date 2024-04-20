@@ -1429,7 +1429,7 @@ def predict_mos(model, ds, bs, dev, num_workers=0):
                     drop_last=False,
                     pin_memory=False,
                     num_workers=num_workers)
-    #model.to(dev)
+    model.to(dev)
     model.eval()
     with torch.no_grad():
         y_hat_list = [ [model(xb.to(dev), n_wins.to(dev)).cpu().numpy(), yb.cpu().numpy()] for xb, yb, (idx, n_wins) in dl]
